@@ -55,9 +55,9 @@ correlates significantly with the geographical distance between them. Effectivel
 path to travel a percentage of the remaining distance, which causes the shortest path to grow logarithmically with 
 geographical distance, rather than linearly. 
 
-We are curious if these principles extend to less human networks, which we define to be networks whose nodes aren't 
-individuals, but whose edges can be based on them. In particular, we want to study the degrees of separation between 
-differing Anime, using ``myanimelist.net'' as our dataset. MyAnimeList (MAL) provides a unique opportunity to take a 
+We are curious if these principles extend to less web networks, which are generally considered to be networks that don't 
+use humans as nodes, but can use their interactions to define edges. In particular, we want to study the degrees of separation 
+between differing Anime, using ``myanimelist.net'' as our dataset. MyAnimeList (MAL) provides a unique opportunity to take a 
 single set of nodes (anime), and multiple sets of edges that we can analyze. For example, edges can be recommendations 
 from one anime to another, or a shared cast. 
 
@@ -102,11 +102,25 @@ The question
 ``If you chose any two people in the world at random, how many acquaintances are needed to create a chain between them?''
 [Kochen, 1989; Garfield 1979] 
 \end{quote} 
+describes the small world problem in a succinct manner. Stanley Milgram's famous postcard experiment [citation???] was the 
+first experiment that attempted to measure the degrees of seperation between people in the world. To do so, he selected
+a broker in Boston to be a target, and had a group of indviduals send leters to acquaintances, seeing if those letters
+could eventually be routed to the Boston broker. From the results of Milgram's experiment is derived the famous 
+"six degrees of seperation" phrase. 
 
-Stanley Milgram's famous postcard experiment [citation???] was the first experiment that demonstrated the idea that 
-the world had a small social diameter.  
+Although there are heavy criticisms regarding the veracity of Milgram's experiments, his work clearly demonstrates two ideas.
+The first is that the degrees of seperation in a human social graph are far smaller than one would intuitively think,
+and the other is that the graph is \textit{navigatable}, that is, there exists some algorithm that can traverse from any
+node $s$ to destination node $t$ only knowing the edges of the current node in $O(\log(N)^\beta)$ time.
 
-`
+The intuition for both of these properties derives from the idea that the likelihood two people know each other is strongly
+correlated with their geographical distance. That is, in general, as long as the next hop is geographically closer, then our
+new node has a shorter path to the destination node than our current one. However, this isn't sufficent to explain the
+results of Milgram's experiments. For example, if every individual knows every other individual within a one mile radius, but
+knows no one else, then the shortest path between two nodes eight hundred miles apart requires eight hundred hops -- order of 
+magnitues greater than what was observed in Milgram's study. Thus the second requirement is that with high probability, our current
+node will be connected to another node whose distance to the destination is no more than $\alpha << 1$ times the distance from
+our current node to the destinatnion node. 
 % itemize
 \begin{itemize}
 \item To the best of our knowledge, the MMSN protocol is the first
