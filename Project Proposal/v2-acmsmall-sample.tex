@@ -120,7 +120,24 @@ results of Milgram's experiments. For example, if every individual knows every o
 knows no one else, then the shortest path between two nodes eight hundred miles apart requires eight hundred hops -- order of 
 magnitues greater than what was observed in Milgram's study. Thus the second requirement is that with high probability, our current
 node will be connected to another node whose distance to the destination is no more than $\alpha << 1$ times the distance from
-our current node to the destinatnion node. 
+our current node to the destinatnion node. This allows us to travel to the desitnation much faster -- the number of hops now 
+scales logarithmically rather than linerally with the distance to the destination. 
+
+Although "six degrees of seperation" is often cited, Milgram's experiment has a few key flaws that should prevent its results
+from extending to the claim that "all humans are seperated by six degrees." The first is that both the start and end nodes
+were recruited from socially active people -- basically, in expectation the degrees of seperation between individuals is 
+actually higher, because starting nodes and ending node should be less reachable than the ones used in the experiment. 
+
+Nevertheless, "six degrees of seperation" is probably here to stay, and is supported by more recent analysis on the Facebook 
+social network. 
+
+The Facebook network is clearly a social graph, and maintains the properties one would expect from a social graph.
+Properties such as high clustering, low degrees of seperation, and relatively low connections (i.e. number of edges << number of nodes$^2$) 
+are all observed in this network. Other networks where these properties are observed includes a network of actors, where
+edges are defined by having collaborated on multiple movies together, or a network of researchers, where an edge is
+defined to be when two researches have collaborated on a published paper together.
+
+On the flip side of social graphs are information graphs, or web graphs. These graphs 
 % itemize
 \begin{itemize}
 \item To the best of our knowledge, the MMSN protocol is the first
