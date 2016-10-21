@@ -103,40 +103,40 @@ The question
 [Kochen, 1989; Garfield 1979] 
 \end{quote} 
 describes the small world problem in a succinct manner. Stanley Milgram's famous postcard experiment [citation???] was the 
-first experiment that attempted to measure the degrees of seperation between people in the world. To do so, he selected
-a broker in Boston to be a target, and had a group of indviduals send leters to acquaintances, seeing if those letters
-could eventually be routed to the Boston broker. From the results of Milgram's experiment is derived the famous 
-"six degrees of seperation" phrase. 
+first experiment that attempted to measure the degrees of separation between people in the world. To do so, he selected
+a broker in Boston to be a target, and had a group of individuals send letters to acquaintances, seeing if those letters
+could eventually be routed to the Boston broker. The famous "six degrees of separation" phrase is derived from the results 
+of Milgram's experiment.
 
-Although there are heavy criticisms regarding the veracity of Milgram's experiments, his work clearly demonstrates two ideas.
-The first is that the degrees of seperation in a human social graph are far smaller than one would intuitively think,
-and the other is that the graph is \textit{navigatable}, that is, there exists some algorithm that can traverse from any
+Although there are heavy criticisms around the veracity of Milgram's experiments, his work clearly demonstrates two ideas.
+The first is that the degrees of separation in a human social graph are far smaller than one would intuitively think,
+and the other is that the graph is \textit{navigable}, that is, there exists some algorithm that can traverse from any
 node $s$ to destination node $t$ only knowing the edges of the current node in $O(\log(N)^\beta)$ time.
 
-The intuition for both of these properties derives from the idea that the likelihood two people know each other is strongly
+The intuition for both of these properties derives from the idea that the likelihood of two people knowing each other is strongly
 correlated with their geographical distance. That is, in general, as long as the next hop is geographically closer, then our
-new node has a shorter path to the destination node than our current one. However, this isn't sufficent to explain the
+new node has a shorter path to the destination node than our current one. However, this isn't sufficient to explain the
 results of Milgram's experiments. For example, if every individual knows every other individual within a one mile radius, but
 knows no one else, then the shortest path between two nodes eight hundred miles apart requires eight hundred hops -- order of 
-magnitues greater than what was observed in Milgram's study. Thus the second requirement is that with high probability, our current
+magnitudes greater than what was observed in Milgram's study. Thus the second requirement is that with high probability, our current
 node will be connected to another node whose distance to the destination is no more than $\alpha << 1$ times the distance from
-our current node to the destinatnion node. This allows us to travel to the desitnation much faster -- the number of hops now 
-scales logarithmically rather than linerally with the distance to the destination. 
+our current node to the destination node. This allows us to travel to the destination much faster -- the number of hops now 
+scales logarithmically rather than linearly with the distance to the destination. 
 
-Although "six degrees of seperation" is often cited, Milgram's experiment has a few key flaws that should prevent its results
+Although "six degrees of separation" is often cited, Milgram's experiment has a few key flaws that should prevent its results
 from extending to the claim that "all humans are seperated by six degrees." These key flaws are highlighted by Judith Kleinfeld.
 The first is that both the start and end nodes were recruited from socially active people -- 
-basically, in expectation the degrees of seperation between individuals is actually higher, because starting nodes and ending 
+basically, in expectation the degrees of separation between individuals is actually higher, because starting nodes and ending 
 node should be less reachable than the ones used in the experiment. Other criticisms he highlights include that humans have
-a psychological bias to believe in a short degree of seperation. In general, Kleinfeld criticizes the legitimacy of the study, 
+a psychological bias to believe in a short degree of separation. In general, Kleinfeld criticizes the legitimacy of the study, 
 but does not provide any methods to provide a better study, and his criticisms probably aren't strong enough to reject the
-concept of a small world, although they are probably strong enough to suggest that six degrees of seperation is insufficent. 
+concept of a small world, although they are probably strong enough to suggest that six degrees of separation is insufficient. 
 
-Nevertheless, "six degrees of seperation" is probably here to stay, and is supported by more recent analysis on the Facebook 
+Nevertheless, "six degrees of separation" is probably here to stay, and is supported by more recent analysis on the Facebook 
 social network by Backstrom et. al. 
 
 The Facebook network is clearly a social graph, and maintains the properties one would expect from a social graph.
-Properties such as high clustering, low degrees of seperation, and relatively low connections (i.e. number of edges << number of nodes$^2$) 
+Properties such as high clustering, low degrees of separation, and relatively low connections (i.e. number of edges << number of nodes$^2$) 
 are all observed in this network. Other networks where these properties are observed includes a network of actors, where
 edges are defined by having collaborated on multiple movies together, or a network of researchers, where an edge is
 defined to be when two researches have collaborated on a published paper together. The work by Backstorm uses HyperANF, which
@@ -165,30 +165,30 @@ At this point it becomes clear that there is an interesting distinction between 
 the distinction between them. Luckily there has already been work done on this on the twitter graph by Myers et. al. Myers et. al. wanted to 
 determine whether Twitter acted more like a social graph or an information network. The basis of this question is that follows are done 
 through interests rather than relationships, which makes it more like an information network, but initial follows are often based on 
-social interactions. They define the nodes to be twitter acounts and edges to be mutual follows between the accounts.
+social interactions. They define the nodes to be twitter accounts and edges to be mutual follows between the accounts.
 
 
 Myers et. al. also used HyperANF on their dataset of 175 million users and approximately twenty billion edges for mutual follows. (Twitter 
-has more edges per node than Facebook since follows are more common than friendships). In this case, they analyzed multipe graph characteristics
-of the Twitter graph and compared them to the known characteristics of both information and social graphs. For degre distributions, it is clear
+has more edges per node than Facebook since follows are more common than friendships). In this case, they analyzed multiple graph characteristics
+of the Twitter graph and compared them to the known characteristics of both information and social graphs. For degree distributions, it is clear
 that Twitter does not exhibit social graph like characteristics because it has too many individuals who follow and are followed by thousands 
 of people when people are typically unable to maintain more than 150 social relationships at any given time. For both shortest path length and spid,
 the authors concluded that Twitter exhibited social graph like behaviors, with the shortest path being around 4 (slightly longer than Facebook), and
-the spid being around 0.11 (slightly wider than Facebook). They also noted that the clustering coefficent of the Twitter graph was relatively high,
+the spid being around 0.11 (slightly wider than Facebook). They also noted that the clustering coefficient of the Twitter graph was relatively high,
 and thus indicative of a social graph. However, they also noted that the two-hop neighborhoods of Twitter were much much larger than what 
 would be expected in a social graph. 
 
 The authors than unhelpfully concluded that Twitter exhibits some characteristics of a social graph and some characteristics of a information graph,
-but make no attempt to unify the differing characeristics. 
+but make no attempt to unify the differing characteristics. 
 
 
 It is in this space that we think interesting work can be done. 
 \section{Project Proposal}
-From the above papers we derive two interesting questions: Are social graphs only demonstrated when nodes are human? Can we use graph characteristics to 
+From the above papers we derive two interesting questions: Are social graphs only apparent when nodes are human? Can we use graph characteristics to 
 determine how "social" different edge types are? 
 
 
-The first comes from the fact that all the papers we have read so far that describe social graphs always use human nodes -- people in a friend 
+The first comes from the fact that all the papers we have read so far on social graphs always use human nodes -- people in a friend 
 graph like Facebook, or actors or researchers in a collaboration graph, etc. We are curious if a graph can exhibit social graph features when
 the nodes are non-human but the edges are derived from humans. One example of such a graph could be research papers that share an edge if they
 share a mutual author. 
@@ -200,18 +200,18 @@ it becomes clear that (and is rather intuitive) that the sociality of a graph is
 
 To research both these areas, we propose the following project:
 
-Analyze the graph characteristics of MyAnimeList using different Anime as nodes, and a differing set of edges currently including recommendations 
-and actorship. 
+Analyze the graph characteristics of MyAnimeList using different Anime as nodes, and a differing set of edges including recommendations 
+and actorship.
 
 The graph characteristics we will analyze are the ones that were used to analyze the twitter dataset, specifically degree distributions, shortest path length,
-spid, clustering coefficent, and two-hop neighborhoods. We can also add the diameter of the graph, which was largely ignored by Twitter due to the expensiveness
+spid, clustering coefficient, and two-hop neighborhoods. We can also add the diameter of the graph, which was largely ignored by Twitter due to the expensiveness
 of its calculation. If necessary, we may also analyze subgraphs of MyAnimeList dividing by genre.
 
 \subsection{Background on MyAnimeList}
 MyAnimeList is a website that has aggregate data about tens of thousands of anime. For each anime, it provides metadata information such as genres, ratings, and
 episode length, as well as voice actors and user recommendations. 
 
-There are currently 34240 anime in the database, and around fifteen recommenations per anime, although this varies greatly depending on the popularity of 
+There are currently 34240 anime in the database, and around fifteen recommendations per anime, although this varies greatly depending on the popularity of 
 the anime. 
 
 There is also user information, where users can input the animes that they have watched and their ratings of them, which can also be used as an edge set, although
@@ -221,19 +221,19 @@ To scrap the Anime data from MyAnimeList, we are modifying an existing python li
 due to MyAnimeList changing their tags.
 \subsection{Algorithms for Analysis} 
 Luckily, our dataset is not a particularly huge one, so it is unlikely that we will need complex algorithms such as HyperANF to determine our graph characteristics.
-Degree distribution calculation does not require a particularly complex algorithim, and our graph is small enough that storing a value for every node is not expensive. 
+Degree distribution calculation does not require a particularly complex algorithm, and our graph is small enough that storing a value for every node is not expensive. 
 Both connected component and shortest length pass can be calculated using snap functions. A trivial implementation of two-hop neighborhoods is functionally an $O(VE)$ 
 operation (get set of nodes at one-hop, get set of nodes at two-hop) per node, or a $O(V^2E)$ operation in total. At 30,000 nodes, this is also not expensive. The Floyd-Warshall
-algorithm can compute the diameter of the graph in $O(V^3)$, which is sufficent for our small graph. 
+algorithm can compute the diameter of the graph in $O(V^3)$, which is sufficient for our small graph. 
 \subsection{Evaluation} 
 Like in the Twitter paper, we will compare the graph characteristics of MyAnimeList to a standard social graph to determine which characteristics of a social graph MyAnimeList exhibits.
 However, we will go one step further and try to explain why only some of the features of a social graph are represented (if that is indeed the case), and attempt to weigh which 
 features are more reflective of a social graph than others.
-We will then compare the characteristics of MyAnimeList depending on which edge sets we use, and attempt to explain why different edge sets produce different graph characteristics. 
+We will then compare the characteristics of MyAnimeList across edge sets, and attempt to explain why different edge sets produce different graph characteristics. 
 We can then verify our theories of why edge sets produce specific graph characteristics by perturbing the edge set and then comparing graph charactersitics. For example, if our theory is that 
 MyAnimeList doesn't exhibit a social graph because the average Anime has too many recommendations, we can perturb the graph so that we only include edges between Anime when there have 
 been at least two recommendations between them. 
-We define success to be when we have found a theory of why MyAnimeList exhibits a set of graph characteristics that we can demonstrate the validity of the theory through edge pertubation.
+We define success to be when we have found a theory of why MyAnimeList exhibits a set of graph characteristics that we can demonstrate the validity of the theory through edge perturbation.
 \subsection{Submission}
 At the end of the quarter, we expect to be able to submit our MyAnimeList scrapping code and a paper that both analyzes the graph characteristics of MyAnimeList and provides a theory as to
 what real-life properties of edges generate what graph characteristics. 
