@@ -33,10 +33,10 @@
 \begin{document}
 
 % Page heads
-\markboth{Shi and Xue}{Non-Human Social Graphs -- a Case Study of MyAnimeList}
+\markboth{Shi and Xue}{Non-Human Social Graphs} 
 
 % Title portion
-\title {Non-Human Social Graphs -- a Case Study of MyAnimeList}
+\title {Non-Human Social Graphs}
 \author{Wendy Shi
 \affil{Stanford University}
 Alfred Xue
@@ -47,14 +47,14 @@ In CS224 lecture, we discussed the concept of a small world - the idea that the 
 is relatively small. This has been attributed to the principle that the likelihood that two individuals know each other
 correlates significantly with the geographical distance between them. Effectively, this allows each step in the shortest
 path to travel a percentage of the remaining distance, which causes the shortest path to grow logarithmically with 
-geographical distance, rather than linearly. 
+geographical distance, rather than linearly. Other properties, such as having small two-hop neighborhoods and a specific
+degree distribution have all been attributed to Social Network. 
 
-We are curious if these principles extend to web networks, which are generally considered to be networks that don't 
-use humans as nodes, but can use their interactions to define edges. In particular, we want to study the degrees of separation 
-between differing Anime, using ``myanimelist.net'' as our dataset. MyAnimeList (MAL) provides a unique opportunity to take a 
-single set of nodes (anime), and multiple sets of edges that we can analyze. For example, edges can be recommendations 
-from one anime to another, or a shared cast. 
-
+We are curious to see which of these characteristics can be found in non-social graphs, and using such information evaluate
+which of these characteristics are actually specific to social graphs, and which might be artifacts of some property that 
+isn't specific to social graphs. To do so, we compute the coefficents for these characteristics on many social and information 
+networks, including MyAnimeList, actors, and Wikipedia, and compare these values to those found on Social Networks such as 
+Facebook. We found that (insert conclusion here). 
 \end{abstract}
 
 \category{C}{Graph Characteristics}{}
@@ -64,26 +64,27 @@ from one anime to another, or a shared cast.
 \keywords{Small World, Network Analysis}
 
 \acmformat{Wendy Shi, Alfred Xue, 2016. Diameter of MyAnimeList}
-% At a minimum you need to supply the author names, year and a title.
-% IMPORTANT:
-% Full first names whenever they are known, surname last, followed by a period.
-% In the case of two authors, 'and' is placed between them.
-% In the case of three or more authors, the serial comma is used, that is, all author names
-% except the last one but including the penultimate author's name are followed by a comma,
-% and then 'and' is placed before the final author's name.
-% If only first and middle initials are known, then each initial
-% is followed by a period and they are separated by a space.
-% The remaining information (journal title, volume, article number, date, etc.) is 'auto-generated'.
-
 \begin{bottomstuff}
-%This work is supported by the National Science Foundation, under
-%grant CNS-0435060, grant CCR-0325197 and grant EN-CS-0329609.
 \end{bottomstuff}
 
 \maketitle
 
 
 \section{Introduction}
+Plenty of research has been done on the topological properties of social and information networks. From a non-technical perspective, 
+it is very easy to define what a social network is. We think of it as the networks that describe some types of relationships between 
+individuals in society. The most popular example is Facebook, which defines itself to be a social network. But there are also other 
+social networks, such as phone contacts and collaborators. Information networks tend to be defined as "not social networks", but we
+think of them as web links or co-authored research papers. Myers et al admits that there isn't a clear definition by researchers of
+what a social network is, and their own research on the Twitter network demonstrates that the boundary between a social network and
+a non-social network isn't super clear. Our objective is to evaluate the topological properties of a set of networks that have varrying degrees 
+of what people would traditionally consider to be a "social network", and use those to attempt to discern which properties are more 
+relevant to a technical definition of a social network.
+
+The networks that we studied (from most social to most informational) are Facebook, Actors, Twitter, MyAnimeList with edges based on recommendations,
+MyAnimeList with edges based on Genre, and Wikipedia page links. 
+
+\section{Literature Review}
 The question 
 \begin{quote}
 ``If you chose any two people in the world at random, how many acquaintances are needed to create a chain between them?''
@@ -168,62 +169,6 @@ would be expected in a social graph.
 The authors than unhelpfully concluded that Twitter exhibits some characteristics of a social graph and some characteristics of a information graph,
 but make no attempt to unify the differing characteristics [3].
 
-
-It is in this space that we think interesting work can be done. 
-\section{Project Proposal}
-From the above papers we derive two interesting questions: Are social graphs only apparent when nodes are human? Can we use graph characteristics to 
-determine how "social" different edge types are? 
-
-
-The first comes from the fact that all the papers we have read so far on social graphs always use human nodes -- people in a friend 
-graph like Facebook, or actors or researchers in a collaboration graph, etc. We are curious if a graph can exhibit social graph features when
-the nodes are non-human but the edges are derived from humans. One example of such a graph could be research papers that share an edge if they
-share a mutual author. 
-
-
-The Twitter paper discusses its decision to use mutual follows to generate edges but does some analysis on inbound/outbound only edges. Through this,
-it becomes clear that (and is rather intuitive) that the sociality of a graph is highly dependent on the type of edges used. 
-
-
-To research both these areas, we propose the following project:
-
-Analyze the graph characteristics of MyAnimeList using different Anime as nodes, and a differing set of edges including recommendations 
-and actorship.
-
-The graph characteristics we will analyze are the ones that were used to analyze the twitter dataset, specifically degree distributions, shortest path length,
-spid, clustering coefficient, and two-hop neighborhoods. We can also add the diameter of the graph, which was largely ignored by Twitter due to the expensiveness
-of its calculation. If necessary, we may also analyze subgraphs of MyAnimeList dividing by genre.
-
-\subsection{Background on MyAnimeList}
-MyAnimeList is a website that has aggregate data about tens of thousands of anime. For each anime, it provides metadata information such as genres, ratings, and
-episode length, as well as voice actors and user recommendations. 
-
-There are currently 34240 anime in the database, and around fifteen recommendations per anime, although this varies greatly depending on the popularity of 
-the anime. 
-
-There is also user information, where users can input the animes that they have watched and their ratings of them, which can also be used as an edge set, although
-we have not tried scrapping this yet. 
-
-To scrap the Anime data from MyAnimeList, we are modifying an existing python library https://pypi.python.org/pypi/mal-scraper/0.1.0 that no longer works 
-due to MyAnimeList changing their tags.
-\subsection{Algorithms for Analysis} 
-Luckily, our dataset is not a particularly huge one, so it is unlikely that we will need complex algorithms such as HyperANF to determine our graph characteristics.
-Degree distribution calculation does not require a particularly complex algorithm, and our graph is small enough that storing a value for every node is not expensive. 
-Both connected component and shortest length pass can be calculated using snap functions. A trivial implementation of two-hop neighborhoods is functionally an $O(VE)$ 
-operation (get set of nodes at one-hop, get set of nodes at two-hop) per node, or a $O(V^2E)$ operation in total. At 30,000 nodes, this is also not expensive. The Floyd-Warshall
-algorithm can compute the diameter of the graph in $O(V^3)$, which is sufficient for our small graph. 
-\subsection{Evaluation} 
-Like in the Twitter paper, we will compare the graph characteristics of MyAnimeList to a standard social graph to determine which characteristics of a social graph MyAnimeList exhibits.
-However, we will go one step further and try to explain why only some of the features of a social graph are represented (if that is indeed the case), and attempt to weigh which 
-features are more reflective of a social graph than others.
-We will then compare the characteristics of MyAnimeList across edge sets, and attempt to explain why different edge sets produce different graph characteristics. 
-We can then verify our theories of why edge sets produce specific graph characteristics by perturbing the edge set and then comparing graph charactersitics. For example, if our theory is that 
-MyAnimeList doesn't exhibit a social graph because the average Anime has too many recommendations, we can perturb the graph so that we only include edges between Anime when there have 
-been at least two recommendations between them. 
-We define success to be when we have found a theory of why MyAnimeList exhibits a set of graph characteristics that we can demonstrate the validity of the theory through edge perturbation.
-\subsection{Submission}
-At the end of the quarter, we expect to be able to submit our MyAnimeList scrapping code and a paper that both analyzes the graph characteristics of MyAnimeList and provides a theory as to
-what real-life properties of edges generate what graph characteristics. 
 % Bibliography
 \section{Bibliography}
 [1] Kleinfield, J. 2002. Could It Be A Big World?. Forthcoming Society 2002.
