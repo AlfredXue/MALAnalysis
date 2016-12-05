@@ -4,17 +4,23 @@ import matplotlib.pyplot as plt
 import random
 import collections
 import numpy as np
+import itertools
 
+
+COLORS = itertools.cycle(["r", "b", "g", "c", "m", "y", "k", "w"])
+GRAPH_LIST = [("MAL-recommendation", "mal-rec-graph"), ("Erdos-Renyi", "erdos-renyi")]
 DATA_SOURCE = "uniq-mal-dump.txt"
 
 
-def calculate_degree_dist(graph):
+def calculate_degree_dist(filename):
+    graph = snap.LoadEdgeList(snap.PUNGraph, filename)
     degmap = {}
     for node in graph.Nodes():
         deg = node.GetOutDeg()
         if not deg in degmap:
             degmap[deg] = 0
         degmap[deg] += 1
+    print "average degree of graph is " + str(calculate_mean_degree_sep(degmap))
     for i in degmap:
         degmap[i] = degmap[i] /float(graph.GetNodes())
     return degmap
@@ -29,22 +35,6 @@ def get_x_y_deg(degmap):
         y.append(degmap[item])
     
     return x,y
-
-def plot_degree_dist(filename):
-    graph1 = snap.LoadEdgeList(snap.PUNGraph, filename)
-
-    graph1_deg = calculate_degree_dist(graph1)
-
-    plt.xscale('log')
-    plt.yscale('log')
-
-    plt.xlabel('degree k')
-    plt.ylabel('proportion of nodes with degree k')
-
-    x,y = get_x_y_deg(graph1_deg)
-    plt.scatter(x,y, color='red')
-
-    plt.show()
 
 def get_id_to_name(src, dst):
     with open(dst, 'w') as output:
@@ -103,7 +93,7 @@ def get_dist_distribution(filename, sample_count):
         dist = snap.GetShortPath(graph, sample_pair[0], sample_pair[1], False)
         if dist > 0:
             distance_dst[dist] += 1
-    print str(calculate_spid(distance_dst)) + " for " + str(sample_count) + " samples"
+    print "spid is " + str(calculate_spid(distance_dst)) + " for " + str(sample_count) + " samples"
     for item in distance_dst:
         distance_dst[item] /= float(sample_count)
     return distance_dst
@@ -123,9 +113,17 @@ def get_degree_separation(filename, sample_count):
             degree_dst[hop]+= nodes_at_hop
             hop+=1
             nodes_at_hop = snap.GetNodesAtHop(graph, sample, hop, nv, False)
+    print "average degree of separation is " + str(calculate_mean_degree_sep(degree_dst))
     for item in degree_dst:
         degree_dst[item] /= float(len(node_list) * sample_count)
     return degree_dst
+
+def calculate_mean_degree_sep(distance_dist):
+    degree_list = []
+    for item in distance_dist:
+        for i in range(0, distance_dist[item]):
+            degree_list.append(item)
+    return np.mean(degree_list)
 
 def pdf_to_cdf(distribution):
     keys = sorted(distribution.keys())
@@ -159,27 +157,72 @@ def get_two_hop_dist(filename):
         two_hop[i] = two_hop[i] /float(graph.GetNodes())
     return two_hop
 
-if __name__ == "__main__":
-    dist = get_two_hop_dist("mal-rec-graph")
+def plot_two_hop():
     plt.xscale('log')
     plt.yscale('log')
-    plt.xlabel('size of two hop neighborhood')
+    plt.xlabel('sizes of two hop neighborhood')
     plt.ylabel('proportion of nodes')
-    plt.scatter(dist.keys(), dist.values(), color = 'Red')
-    plt.show()
-    #dist = get_dist_distribution("mal-rec-graph", 1000)
-    #dist1 = get_dist_distribution("mal-rec-graph", 5000)
-    #dist2 = get_dist_distribution("mal-rec-graph", 8000)
-    #dist = get_degree_separation("mal-rec-graph", 1000)
-    ##print dist
-    #print sum(dist.values())
-    #pdf_to_cdf(dist)
-    #print dist
-    #plt.plot(dist.keys(), dist.values(), color = 'Red')
-    #plt.plot(dist1.keys(), dist1.values(), color = 'Blue')
-    #plt.plot(dist2.keys(), dist2.values(), color = 'Green')
+    for graph in GRAPH_LIST:
+        print "###" + graph[0] + "###"
+        two_hop_dist = get_two_hop_dist(graph[1])
+        plt.scatter(two_hop_dist.keys(), two_hop_dist.values(), color = next(COLORS), label = graph[0])
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
+          ncol=3)
+    plt.savefig('two-hop.png', bbox_inches='tight')
+    plt.clf()
     #plt.show()
-    #plot_degree_dist()
-    #find_nonexistent_anime()
-    #create_edge_list("uniq-mal-dump.txt")
-    #get_id_to_name("maldump.txt", "maldump-key")
+
+def plot_dist_distribution():
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.xlabel('distance of shortest path between two nodes')
+    plt.ylabel('proportion of samples')
+    for graph in GRAPH_LIST:
+        print "###" + graph[0] + "###"
+        dist = get_dist_distribution(graph[1], 5000)
+        plt.plot(dist.keys(), dist.values(), color = next(COLORS), label = graph[0])
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
+          ncol=3)
+    plt.savefig('dist.png', bbox_inches='tight')
+    plt.clf()
+    #plt.show()  
+
+def plot_degree_dist():
+    plt.xscale('log')
+    plt.yscale('log')
+
+    plt.xlabel('degree k')
+    plt.ylabel('proportion of nodes with degree k')
+    for graph in GRAPH_LIST:
+        print "###" + graph[0] + "###"
+        deg = calculate_degree_dist(graph[1])
+        x,y = get_x_y_deg(deg)
+        plt.scatter(x, y, color = next(COLORS), label = graph[0])
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
+          ncol=3)
+    plt.savefig('degree-distribution.png', bbox_inches='tight')
+    plt.clf()
+
+def plot_degree_separation():
+    plt.xscale('log')
+    plt.yscale('log')
+
+    plt.xlabel('degree of separation k')
+    plt.ylabel('proportion of nodes pairs with separation k')
+    for graph in GRAPH_LIST:
+        print "###" + graph[0] + "###"
+        sep = get_degree_separation(graph[1], 5000)
+        plt.plot(sep.keys(), sep.values(), color = next(COLORS), label = graph[0])
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
+          ncol=3)
+    plt.savefig('separation-distribution.png', bbox_inches='tight')
+    plt.clf()
+
+if __name__ == "__main__":
+    plot_two_hop()
+    COLORS = itertools.cycle(["r", "b", "g", "c", "m", "y", "k", "w"])
+    plot_dist_distribution()
+    COLORS = itertools.cycle(["r", "b", "g", "c", "m", "y", "k", "w"])
+    plot_degree_dist()
+    COLORS = itertools.cycle(["r", "b", "g", "c", "m", "y", "k", "w"])
+    plot_degree_separation()
