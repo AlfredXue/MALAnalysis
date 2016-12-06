@@ -8,7 +8,7 @@ import itertools
 
 
 COLORS = itertools.cycle(["r", "b", "g", "c", "m", "y", "k", "w"])
-GRAPH_LIST = [("MAL-recommendation", "mal-rec-graph"), ("Erdos-Renyi", "erdos-renyi")]
+GRAPH_LIST = [("MAL-recommendation", "mal-rec-graph"), ("Erdos-Renyi", "erdos-renyi"),("Actors-graph","imdb_actor_edges.tsv"), ("Facebook","facebook_combined.txt")]
 DATA_SOURCE = "uniq-mal-dump.txt"
 
 
@@ -105,7 +105,10 @@ def get_degree_separation(filename, sample_count):
     node_list = []
     for node in graph.Nodes():
         node_list.append(node.GetId())
-    samples = random.sample(node_list, sample_count)
+    if sample_count < len(node_list):
+        samples = random.sample(node_list, sample_count)
+    else:
+        samples = node_list
     for sample in samples:
         hop = 1
         nodes_at_hop = snap.GetNodesAtHop(graph, sample, hop, nv, False)
