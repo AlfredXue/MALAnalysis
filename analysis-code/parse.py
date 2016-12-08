@@ -6,9 +6,10 @@ import collections
 import numpy as np
 import itertools
 
-
+SUFFIX = "bk-comp"
 COLORS = itertools.cycle(["r", "b", "g", "c", "m", "y", "k", "w"])
-GRAPH_LIST = [("MAL-recommendation", "mal-rec-graph"), ("Erdos-Renyi", "erdos-renyi"),("Actors-graph","imdb_actor_edges.tsv"), ("Facebook","facebook_combined.txt")]
+GRAPH_LIST = [("MAL-recommendation", "mal-rec-graph"), ("brightkite", "Brightkite_edges.txt")]
+#("Actors-graph","imdb_actor_edges.tsv"), ("Facebook","facebook_combined.txt")]
 DATA_SOURCE = "uniq-mal-dump.txt"
 
 
@@ -160,6 +161,18 @@ def get_two_hop_dist(filename):
         two_hop[i] = two_hop[i] /float(graph.GetNodes())
     return two_hop
 
+def get_clustering_coeff(filename):
+    graph = snap.LoadEdgeList(snap.PUNGraph, filename)
+    degree_list = []
+    coeff_list = []
+    avg_coeff = collections.defaultdict(int)
+    for node in graph.Nodes():
+        avg_coeff[node.GetOutDeg()] = (avg_coeff[node.GetOutDeg()] + snap.GetNodeClustCf(graph, node.GetId())) / 2.0
+        degree_list.append(node.GetOutDeg())
+        coeff_list.append(snap.GetNodeClustCf(graph, node.GetId()))
+    return avg_coeff
+    #return degree_list, coeff_list
+
 def plot_two_hop():
     plt.xscale('log')
     plt.yscale('log')
@@ -171,7 +184,7 @@ def plot_two_hop():
         plt.scatter(two_hop_dist.keys(), two_hop_dist.values(), color = next(COLORS), label = graph[0])
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
           ncol=3)
-    plt.savefig('two-hop.png', bbox_inches='tight')
+    plt.savefig('two-hop' + SUFFIX + '.png', bbox_inches='tight')
     plt.clf()
     #plt.show()
 
@@ -186,7 +199,7 @@ def plot_dist_distribution():
         plt.plot(dist.keys(), dist.values(), color = next(COLORS), label = graph[0])
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
           ncol=3)
-    plt.savefig('dist.png', bbox_inches='tight')
+    plt.savefig('dist' + SUFFIX + '.png', bbox_inches='tight')
     plt.clf()
     #plt.show()  
 
@@ -203,7 +216,7 @@ def plot_degree_dist():
         plt.scatter(x, y, color = next(COLORS), label = graph[0])
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
           ncol=3)
-    plt.savefig('degree-distribution.png', bbox_inches='tight')
+    plt.savefig('degree-distribution' + SUFFIX +'.png', bbox_inches='tight')
     plt.clf()
 
 def plot_degree_separation():
@@ -218,10 +231,29 @@ def plot_degree_separation():
         plt.plot(sep.keys(), sep.values(), color = next(COLORS), label = graph[0])
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
           ncol=3)
-    plt.savefig('separation-distribution.png', bbox_inches='tight')
+    plt.savefig('separation-distribution' + SUFFIX + '.png', bbox_inches='tight')
     plt.clf()
 
+def plot_clustering_coeff():
+    plt.xscale('log')
+    plt.yscale('log')
+
+    plt.xlabel('node degree')
+    plt.ylabel('clustering coefficient')
+    for graph in GRAPH_LIST:
+        print "###" + graph[0] + "###"
+        avg_coeff = get_clustering_coeff(graph[1])
+        plt.scatter(avg_coeff.keys(), avg_coeff.values(), color = next(COLORS), label = graph[0])
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
+          ncol=3)
+    plt.savefig('clustering-coeff' + SUFFIX + '.png', bbox_inches='tight')
+    plt.clf()
+
+
+
 if __name__ == "__main__":
+    plot_clustering_coeff()
+    COLORS = itertools.cycle(["r", "b", "g", "c", "m", "y", "k", "w"])
     plot_two_hop()
     COLORS = itertools.cycle(["r", "b", "g", "c", "m", "y", "k", "w"])
     plot_dist_distribution()
